@@ -18,7 +18,9 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       });
       const response = await fetch(request);
       if (response.ok) {
-        localStorage.setItem('token', (await response.json()).token);
+        const userData = await response.json()
+        localStorage.setItem('token', userData.token);
+        localStorage.setItem('auth', JSON.stringify(userData));
         return;
       }
       if (response.headers.get('content-type') !== 'application/json') {
@@ -46,6 +48,14 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
     getPermissions: () => {
       return Promise.resolve();
     },
+    getIdentity: () => {
+      try {
+          const { id, fullName, avatar } = JSON.parse(localStorage.getItem('auth'));
+          return Promise.resolve({ id, fullName, avatar });
+      } catch (error) {
+          return Promise.reject(error);
+      }
+  }
   };
 }
 

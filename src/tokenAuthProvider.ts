@@ -19,7 +19,6 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       const response = await fetch(request);
       if (response.ok) {
         const userData = await response.json()
-        localStorage.setItem('token', userData.token);
         localStorage.setItem('auth', JSON.stringify(userData));
         return;
       }
@@ -32,15 +31,15 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       throw new Error(error || response.statusText);
     },
     logout: () => {
-      localStorage.removeItem('token');
+      localStorage.removeItem('auth');
       return Promise.resolve();
     },
     checkAuth: () =>
-      localStorage.getItem('token') ? Promise.resolve() : Promise.reject(),
+      localStorage.getItem('auth') ? Promise.resolve() : Promise.reject(),
     checkError: error => {
       const status = error.status;
       if (status === 401 || status === 403) {
-        localStorage.removeItem('token');
+        localStorage.removeItem('auth');
         return Promise.reject();
       }
       return Promise.resolve();
@@ -60,14 +59,14 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
 }
 
 export function createOptionsFromToken() {
-  const token = localStorage.getItem('token');
-  if (!token) {
+  const auth = localStorage.getItem('auth');
+  if (!auth) {
     return {};
   }
   return {
     user: {
       authenticated: true,
-      token: 'Token ' + token,
+      token: 'Token ' + JSON.parse(auth).token,
     },
   };
 }

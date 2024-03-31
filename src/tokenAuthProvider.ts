@@ -65,7 +65,8 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
     getPermissions: () => {
       try {
         const { groups, user_permissions } = JSON.parse(localStorage.getItem('profile'));
-        return Promise.resolve({ groups, user_permissions });
+        const profile = {groups:groups, user_permissions:user_permissions}
+        return Promise.resolve(profile);
     } catch (error) {
         return Promise.reject(error);
     }

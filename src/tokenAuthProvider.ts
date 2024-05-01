@@ -68,7 +68,17 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       }
   },
     getPermissions: () => {
-      return Promise.resolve();
+      try {
+        const auth = localStorage.getItem('auth');
+        if (auth) {
+          const { groups, user_permissions } = JSON.parse(auth);
+          return Promise.resolve({ groups, user_permissions });
+        } else {
+          throw new Error('No auth data in local storage');
+        }
+      } catch (error) {
+        return Promise.reject(error);
+      }
     },
   };
 }

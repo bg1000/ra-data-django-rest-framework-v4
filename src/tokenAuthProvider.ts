@@ -1,18 +1,15 @@
 import { AuthProvider, fetchUtils } from 'ra-core';
 
 export interface Options {
-  obtainAuthTokenUrl?: string;
+  obtainAuthTokenUrl: string;
+  obtainUserInfoUrl: string;
 }
 
-function tokenAuthProvider(options: Options = {}): AuthProvider {
-  const opts = {
-    obtainAuthTokenUrl: '/api-token-auth/',
-    obtainUserInfoUrl: '/user/',
-    ...options,
-  };
+function tokenAuthProvider(options: Options): AuthProvider {
+
   return {
     login: async ({ username, password }) => {
-      const request = new Request(opts.obtainAuthTokenUrl, {
+      const request = new Request(options.obtainAuthTokenUrl, {
         method: 'POST',
         body: JSON.stringify({ username, password }),
         headers: new Headers({ 'Content-Type': 'application/json' }),
@@ -23,7 +20,7 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
       }
       const { token, id } = await response.json();
       // Fetch additional user data
-      const userRequest = new Request(`${opts.obtainUserInfoUrl}/${id}/`, {
+      const userRequest = new Request(`${options.obtainUserInfoUrl}${id}/`, {
         method: 'GET',
         headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': `token ${token}` }),
       });
@@ -42,10 +39,14 @@ function tokenAuthProvider(options: Options = {}): AuthProvider {
     },
     logout: () => {
       localStorage.removeItem('auth');
+      localStorage.removeItem('token'); // remove the obsolete 'token' item if it exists
       return Promise.resolve();
     },
-    checkAuth: () =>
-      localStorage.getItem('auth') ? Promise.resolve() : Promise.reject(),
+    checkAuth: () => {
+      const auth = localStorage.getItem('auth');
+      localStorage.removeItem('token'); // remove the obsolete 'token' item if it exists
+      return auth ? Promise.resolve() : Promise.reject();
+    },
     checkError: (error) => {
       const status = error.status;
       if (status === 401 || status === 403) {
@@ -88,10 +89,11 @@ export function createOptionsFromToken() {
   if (!auth) {
     return {};
   }
+  const { token } = JSON.parse(auth);
   return {
     user: {
       authenticated: true,
-      token: 'Token ' + auth.token,
+      token: 'Token ' + token,
     },
   };
 }

@@ -49,17 +49,17 @@ function tokenAuthProvider(options: Options): AuthProvider {
         // Fetch auth data from local storage
         const auth = JSON.parse(localStorage.getItem('auth') || '{}');
         const { id, token } = auth;
-    
+
         // Check if auth data contains an id and a token
         if (!id || !token) {
           throw new Error('User is not logged in');
         }
-    
+
         // Fetch additional user data
         const authData = await fetchUserData(id, options);
         // Store the auth data in local storage
         localStorage.setItem('auth', JSON.stringify(authData));
-        const {fullName, avatar } = authData;
+        const { fullName, avatar } = authData;
         return Promise.resolve({ id, fullName, avatar });
       } catch (error) {
         // Log the error and return a rejected Promise

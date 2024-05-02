@@ -6,7 +6,6 @@ export interface Options {
 }
 
 function tokenAuthProvider(options: Options): AuthProvider {
-
   return {
     login: async ({ username, password }) => {
       const request = new Request(options.obtainAuthTokenUrl, {
@@ -19,20 +18,10 @@ function tokenAuthProvider(options: Options): AuthProvider {
         throw new Error(response.statusText);
       }
       const { token, id } = await response.json();
-      // Fetch additional user data
-      const userRequest = new Request(`${options.obtainUserInfoUrl}${id}/`, {
-        method: 'GET',
-        headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': `token ${token}` }),
-      });
-      const userResponse = await fetch(userRequest);
-      const userData = await userResponse.json();
+      localStorage.setItem('auth', JSON.stringify({ token, id }));
 
-     
-      // Combine the token, id, and user data into a single object
-      const authData = {
-        token,
-        ...userData,
-      };
+      // Fetch additional user data
+      const authData = await fetchUserData(id, options);
 
       // Store the auth data in local storage
       localStorage.setItem('auth', JSON.stringify(authData));
@@ -55,19 +44,29 @@ function tokenAuthProvider(options: Options): AuthProvider {
       }
       return Promise.resolve();
     },
-    getIdentity: () => {
+    getIdentity: async () => {
       try {
-        const auth = localStorage.getItem('auth');
-        if (auth) {
-          const { id, fullName, avatar } = JSON.parse(auth);
-          return Promise.resolve({ id, fullName, avatar });
-        } else {
-          throw new Error('No auth data in local storage');
+        // Fetch auth data from local storage
+        const auth = JSON.parse(localStorage.getItem('auth') || '{}');
+        const { id, token } = auth;
+    
+        // Check if auth data contains an id and a token
+        if (!id || !token) {
+          throw new Error('User is not logged in');
         }
+    
+        // Fetch additional user data
+        const authData = await fetchUserData(id, options);
+        // Store the auth data in local storage
+        localStorage.setItem('auth', JSON.stringify(authData));
+        const {fullName, avatar } = authData;
+        return Promise.resolve({ id, fullName, avatar });
       } catch (error) {
+        // Log the error and return a rejected Promise
+        console.error('An error occurred:', error);
         return Promise.reject(error);
       }
-  },
+    },
     getPermissions: () => {
       try {
         const auth = localStorage.getItem('auth');
@@ -97,7 +96,30 @@ export function createOptionsFromToken() {
     },
   };
 }
+async function fetchUserData(id: string, options: Options) {
+  // Fetch the token from local storage
+  const auth = JSON.parse(localStorage.getItem('auth') || '{}');
+  const token = auth.token;
 
+  // Fetch additional user data
+  const userRequest = new Request(`${options.obtainUserInfoUrl}${id}/`, {
+    method: 'GET',
+    headers: new Headers({
+      'Content-Type': 'application/json',
+      Authorization: `token ${token}`,
+    }),
+  });
+  const userResponse = await fetch(userRequest);
+  const userData = await userResponse.json();
+
+  // Combine the token, id, and user data into a single object
+  const authData = {
+    token,
+    ...userData,
+  };
+
+  return authData;
+}
 export function fetchJsonWithAuthToken(url: string, options: object) {
   return fetchUtils.fetchJson(
     url,

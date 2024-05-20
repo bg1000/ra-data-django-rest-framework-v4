@@ -29,6 +29,12 @@ function tokenAuthProvider(options: Options): AuthProvider {
     logout: () => {
       localStorage.removeItem('auth');
       localStorage.removeItem('token'); // remove the obsolete 'token' item if it exists
+      // Clear Session Storage
+      sessionStorage.clear();
+      // Clear Cookies
+      document.cookie.split(";").forEach((c) => {
+      document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
       return Promise.resolve();
     },
     checkAuth: () => {

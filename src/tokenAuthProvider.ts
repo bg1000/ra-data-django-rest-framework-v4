@@ -71,8 +71,12 @@ function tokenAuthProvider(options: Options): AuthProvider {
       try {
         const auth = localStorage.getItem('auth');
         if (auth) {
-          const { groups, user_permissions } = JSON.parse(auth);
-          return Promise.resolve({ groups, user_permissions });
+          const parsedAuth = JSON.parse(auth);
+          if (parsedAuth && parsedAuth.groups && parsedAuth.user_permissions) {
+            return Promise.resolve({ groups: parsedAuth.groups, user_permissions: parsedAuth.user_permissions });
+          } else {
+            throw new Error('Invalid auth data in local storage');
+          }
         } else {
           throw new Error('No auth data in local storage');
         }

@@ -198,6 +198,16 @@ export default (
         data: { ...json },
       };
     },
+    submitTask: async (resource, params) => {
+      const { json } = await callHttpClientFileHandling(
+        `${apiUrl}/${resource}/`,
+        'POST',
+        params.data
+      );
+      return {
+        data: { ...json },
+      };
+    },
 
     delete: (resource, params) =>
       httpClient(getUrlForId(resource, params.id), {

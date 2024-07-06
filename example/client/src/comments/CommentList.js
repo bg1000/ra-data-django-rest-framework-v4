@@ -41,32 +41,33 @@ const CommentFilter = (props) => (
   </Filter>
 );
 
-const exporter = (records, fetchRelatedRecords) =>
-  fetchRelatedRecords(records, 'post_id', 'posts').then((posts) => {
-    const data = records.map((record) => {
-      const { author, ...recordForExport } = record; // omit author
-      recordForExport.author_name = author.name;
-      recordForExport.post_title = posts[record.post_id].title;
-      return recordForExport;
-    });
-    const headers = [
-      'id',
-      'author_name',
-      'post_id',
-      'post_title',
-      'created_at',
-      'body',
-    ];
-
-    jsonExport(data, { headers }, (error, csv) => {
-      if (error) {
-        console.error(error);
-      }
-      downloadCSV(csv, 'comments');
-    });
+const exporter = (records, fetchRelatedRecords) => fetchRelatedRecords(records, 'post_id', 'posts').then((posts) => {
+  const data = records.map((record) => {
+    const { author, ...recordForExport } = record; // omit author
+    recordForExport.author_name = author.name;
+    recordForExport.post_title = posts[record.post_id].title;
+    return recordForExport;
   });
+  const headers = [
+    'id',
+    'author_name',
+    'post_id',
+    'post_title',
+    'created_at',
+    'body',
+  ];
 
-const CommentPagination = ({ loading, ids, page, perPage, total, setPage }) => {
+  jsonExport(data, { headers }, (error, csv) => {
+    if (error) {
+      console.error(error);
+    }
+    downloadCSV(csv, 'comments');
+  });
+});
+
+const CommentPagination = ({
+  loading, ids, page, perPage, total, setPage,
+}) => {
   const translate = useTranslate();
   const nbPages = Math.ceil(total / perPage) || 1;
   if (!loading && (total === 0 || (ids && !ids.length))) {
@@ -85,7 +86,8 @@ const CommentPagination = ({ loading, ids, page, perPage, total, setPage }) => {
         )}
         {page !== nbPages && (
           <Button color="primary" key="next" onClick={() => setPage(page + 1)}>
-            {translate('ra.navigation.next')}&nbsp;
+            {translate('ra.navigation.next')}
+&nbsp;
             <ChevronRight />
           </Button>
         )}
@@ -126,17 +128,18 @@ const CommentGrid = ({ ids, data, basePath }) => {
               className="comment"
               title={<TextField record={data[id]} source="author.name" />}
               subheader={<DateField record={data[id]} source="created_at" />}
-              avatar={
+              avatar={(
                 <Avatar>
                   <PersonIcon />
                 </Avatar>
-              }
+              )}
             />
             <CardContent className={classes.cardContent}>
               <TextField record={data[id]} source="body" />
             </CardContent>
             <CardContent className={classes.cardLink}>
-              {translate('comment.list.about')}&nbsp;
+              {translate('comment.list.about')}
+&nbsp;
               <ReferenceField
                 resource="comments"
                 record={data[id]}

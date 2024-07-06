@@ -56,7 +56,7 @@ const PostQuickCreate = ({ onCancel, onSave, ...props }) => {
         },
       });
     },
-    [dispatch, onSave]
+    [dispatch, onSave],
   );
 
   return (
@@ -74,8 +74,8 @@ const PostQuickCreate = ({ onCancel, onSave, ...props }) => {
       <TextInput
         source="teaser"
         validate={required()}
-        fullWidth={true}
-        multiline={true}
+        fullWidth
+        multiline
       />
     </SimpleForm>
   );

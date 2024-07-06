@@ -1,4 +1,6 @@
-import React, { Children, Fragment, cloneElement, memo } from 'react';
+import React, {
+  Children, Fragment, cloneElement, memo,
+} from 'react';
 import BookIcon from '@material-ui/icons/Book';
 import Chip from '@material-ui/core/Chip';
 import { useMediaQuery, makeStyles } from '@material-ui/core';
@@ -27,6 +29,7 @@ import {
 } from 'react-admin'; // eslint-disable-line import/no-unresolved
 
 import ResetViewsButton from './ResetViewsButton';
+
 export const PostIcon = BookIcon;
 
 const useQuickFilterStyles = makeStyles((theme) => ({
@@ -76,11 +79,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PostListBulkActions = memo((props) => (
-  <Fragment>
+  <>
     <ResetViewsButton {...props} />
     <BulkDeleteButton {...props} />
     <BulkExportButton {...props} />
-  </Fragment>
+  </>
 ));
 
 const usePostListActionToolbarStyles = makeStyles({
@@ -128,9 +131,7 @@ const PostList = (props) => {
         <SimpleList
           primaryText={(record) => record.title}
           secondaryText={(record) => `${record.views} views`}
-          tertiaryText={(record) =>
-            new Date(record.published_at).toLocaleDateString()
-          }
+          tertiaryText={(record) => new Date(record.published_at).toLocaleDateString()}
         />
       ) : (
         <Datagrid rowClick={rowClick} expand={PostPanel} optimized>

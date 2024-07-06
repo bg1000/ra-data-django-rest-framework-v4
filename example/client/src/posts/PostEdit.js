@@ -46,8 +46,8 @@ const PostEdit = ({ permissions, ...props }) => (
         <TextInput disabled source="id" />
         <TextInput source="title" validate={required()} resettable />
         <TextInput
-          multiline={true}
-          fullWidth={true}
+          multiline
+          fullWidth
           source="teaser"
           validate={required()}
           resettable
@@ -70,29 +70,29 @@ const PostEdit = ({ permissions, ...props }) => (
                 <AutocompleteInput />
               </ReferenceInput>
               <FormDataConsumer>
-                {({ formData, scopedFormData, getSource, ...rest }) =>
-                  scopedFormData && scopedFormData.user_id ? (
-                    <SelectInput
-                      label="Role"
-                      source={getSource('role')}
-                      choices={[
-                        {
-                          id: 'headwriter',
-                          name: 'Head Writer',
-                        },
-                        {
-                          id: 'proofreader',
-                          name: 'Proof reader',
-                        },
-                        {
-                          id: 'cowriter',
-                          name: 'Co-Writer',
-                        },
-                      ]}
-                      {...rest}
-                    />
-                  ) : null
-                }
+                {({
+                  formData, scopedFormData, getSource, ...rest
+                }) => (scopedFormData && scopedFormData.user_id ? (
+                  <SelectInput
+                    label="Role"
+                    source={getSource('role')}
+                    choices={[
+                      {
+                        id: 'headwriter',
+                        name: 'Head Writer',
+                      },
+                      {
+                        id: 'proofreader',
+                        name: 'Proof reader',
+                      },
+                      {
+                        id: 'cowriter',
+                        name: 'Co-Writer',
+                      },
+                    ]}
+                    {...rest}
+                  />
+                ) : null)}
               </FormDataConsumer>
             </SimpleFormIterator>
           </ArrayInput>

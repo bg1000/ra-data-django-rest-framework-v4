@@ -19,13 +19,10 @@ const sometimesFailsDataProvider = new Proxy(uploadCapableDataProvider, {
   },
 });
 const delayedDataProvider = new Proxy(sometimesFailsDataProvider, {
-  get: (target, name) => (resource, params) =>
-    new Promise((resolve) =>
-      setTimeout(
-        () => resolve(sometimesFailsDataProvider[name](resource, params)),
-        300
-      )
-    ),
+  get: (target, name) => (resource, params) => new Promise((resolve) => setTimeout(
+    () => resolve(sometimesFailsDataProvider[name](resource, params)),
+    300,
+  )),
 });
 
 export default cacheDataProviderProxy(delayedDataProvider);

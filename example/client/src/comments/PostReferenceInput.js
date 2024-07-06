@@ -1,4 +1,6 @@
-import React, { Fragment, useState, useCallback, useEffect } from 'react';
+import React, {
+  Fragment, useState, useCallback, useEffect,
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { FormSpy, useForm } from 'react-final-form';
 
@@ -37,7 +39,7 @@ const PostReferenceInput = (props) => {
   const [newPostId, setNewPostId] = useState('');
 
   useEffect(() => {
-    //Refresh the choices of the ReferenceInput to ensure our newly created post
+    // Refresh the choices of the ReferenceInput to ensure our newly created post
     // always appear, even after selecting another post
     dispatch(
       crudGetMatching(
@@ -45,8 +47,8 @@ const PostReferenceInput = (props) => {
         'comments@post_id',
         { page: 1, perPage: 25 },
         { field: 'id', order: 'DESC' },
-        {}
-      )
+        {},
+      ),
     );
   }, [dispatch, newPostId]);
 
@@ -55,7 +57,7 @@ const PostReferenceInput = (props) => {
       event.preventDefault();
       setShowCreateDialog(true);
     },
-    [setShowCreateDialog]
+    [setShowCreateDialog],
   );
 
   const handleShowClick = useCallback(
@@ -63,7 +65,7 @@ const PostReferenceInput = (props) => {
       event.preventDefault();
       setShowPreviewDialog(true);
     },
-    [setShowPreviewDialog]
+    [setShowPreviewDialog],
   );
 
   const handleCloseCreate = useCallback(() => {
@@ -80,11 +82,11 @@ const PostReferenceInput = (props) => {
       setNewPostId(post.id);
       change('post_id', post.id);
     },
-    [setShowCreateDialog, setNewPostId, change]
+    [setShowCreateDialog, setNewPostId, change],
   );
 
   return (
-    <Fragment>
+    <>
       <ReferenceInput {...props} defaultValue={newPostId}>
         <SelectInput optionText="title" />
       </ReferenceInput>
@@ -97,43 +99,41 @@ const PostReferenceInput = (props) => {
       </Button>
       <FormSpy
         subscription={{ values: true }}
-        render={({ values }) =>
-          values.post_id ? (
-            <Fragment>
-              <Button
-                data-testid="button-show-post"
-                className={classes.button}
-                onClick={handleShowClick}
-              >
-                {translate('ra.action.show')}
-              </Button>
-              <Dialog
-                data-testid="dialog-show-post"
-                fullWidth
-                open={showPreviewDialog}
-                onClose={handleCloseShow}
-                aria-label={translate('simple.create-post')}
-              >
-                <DialogTitle>{translate('simple.create-post')}</DialogTitle>
-                <DialogContent>
-                  <PostPreview
-                    id={values.post_id}
-                    basePath="/posts"
-                    resource="posts"
-                  />
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    data-testid="button-close-modal"
-                    onClick={handleCloseShow}
-                  >
-                    {translate('simple.action.close')}
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </Fragment>
-          ) : null
-        }
+        render={({ values }) => (values.post_id ? (
+          <>
+            <Button
+              data-testid="button-show-post"
+              className={classes.button}
+              onClick={handleShowClick}
+            >
+              {translate('ra.action.show')}
+            </Button>
+            <Dialog
+              data-testid="dialog-show-post"
+              fullWidth
+              open={showPreviewDialog}
+              onClose={handleCloseShow}
+              aria-label={translate('simple.create-post')}
+            >
+              <DialogTitle>{translate('simple.create-post')}</DialogTitle>
+              <DialogContent>
+                <PostPreview
+                  id={values.post_id}
+                  basePath="/posts"
+                  resource="posts"
+                />
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  data-testid="button-close-modal"
+                  onClick={handleCloseShow}
+                >
+                  {translate('simple.action.close')}
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </>
+        ) : null)}
       />
       <Dialog
         data-testid="dialog-add-post"
@@ -152,7 +152,7 @@ const PostReferenceInput = (props) => {
           />
         </DialogContent>
       </Dialog>
-    </Fragment>
+    </>
   );
 };
 

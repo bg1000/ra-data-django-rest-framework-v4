@@ -4,11 +4,10 @@ import { SimpleShowLayout, TextField } from 'react-admin';
 
 const PostPreview = (props) => {
   const record = useSelector(
-    (state) =>
-      state.admin.resources[props.resource]
-        ? state.admin.resources[props.resource].data[props.id]
-        : null,
-    [props.resource, props.id]
+    (state) => (state.admin.resources[props.resource]
+      ? state.admin.resources[props.resource].data[props.id]
+      : null),
+    [props.resource, props.id],
   );
   const version = useSelector((state) => state.admin.ui.viewVersion);
   useSelector((state) => state.admin.loading > 0);

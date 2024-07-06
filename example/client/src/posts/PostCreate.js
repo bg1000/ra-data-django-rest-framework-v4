@@ -43,10 +43,10 @@ const SaveWithNoteButton = (props) => {
             });
             redirectTo(redirect, basePath, newRecord.id, newRecord);
           },
-        }
+        },
       );
     },
-    [create, notify, redirectTo, basePath]
+    [create, notify, redirectTo, basePath],
   );
 
   return <SaveButton {...props} onSave={handleSave} />;
@@ -57,7 +57,7 @@ const PostCreateToolbar = (props) => (
     <SaveButton
       label="post.action.save_and_edit"
       redirect="edit"
-      submitOnEnter={true}
+      submitOnEnter
     />
     <SaveButton
       label="post.action.save_and_show"
@@ -91,7 +91,7 @@ const PostCreate = ({ permissions, ...props }) => {
     () => ({
       average_note: 0,
     }),
-    []
+    [],
   );
 
   const dateDefaultValue = useMemo(() => new Date(), []);
@@ -117,12 +117,10 @@ const PostCreate = ({ permissions, ...props }) => {
         }}
       >
         <TextInput autoFocus source="title" />
-        <TextInput source="teaser" fullWidth={true} multiline={true} />
+        <TextInput source="teaser" fullWidth multiline />
         <RichTextInput source="body" validate={required()} />
         <FormSpy subscription={{ values: true }}>
-          {({ values }) =>
-            values.title ? <NumberInput source="average_note" /> : null
-          }
+          {({ values }) => (values.title ? <NumberInput source="average_note" /> : null)}
         </FormSpy>
 
         <DateInput source="published_at" defaultValue={dateDefaultValue} />
@@ -144,29 +142,29 @@ const PostCreate = ({ permissions, ...props }) => {
                 <AutocompleteInput />
               </ReferenceInput>
               <FormDataConsumer>
-                {({ formData, scopedFormData, getSource, ...rest }) =>
-                  scopedFormData && scopedFormData.user_id ? (
-                    <SelectInput
-                      label="Role"
-                      source={getSource('role')}
-                      choices={[
-                        {
-                          id: 'headwriter',
-                          name: 'Head Writer',
-                        },
-                        {
-                          id: 'proofreader',
-                          name: 'Proof reader',
-                        },
-                        {
-                          id: 'cowriter',
-                          name: 'Co-Writer',
-                        },
-                      ]}
-                      {...rest}
-                    />
-                  ) : null
-                }
+                {({
+                  formData, scopedFormData, getSource, ...rest
+                }) => (scopedFormData && scopedFormData.user_id ? (
+                  <SelectInput
+                    label="Role"
+                    source={getSource('role')}
+                    choices={[
+                      {
+                        id: 'headwriter',
+                        name: 'Head Writer',
+                      },
+                      {
+                        id: 'proofreader',
+                        name: 'Proof reader',
+                      },
+                      {
+                        id: 'cowriter',
+                        name: 'Co-Writer',
+                      },
+                    ]}
+                    {...rest}
+                  />
+                ) : null)}
               </FormDataConsumer>
             </SimpleFormIterator>
           </ArrayInput>

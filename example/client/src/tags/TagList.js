@@ -23,12 +23,14 @@ const SmallCard = ({ className, ...props }) => {
   return <Card {...props} className={`${className} ${classes.card}`} />;
 };
 
-const SubTree = ({ level, root, getChildNodes, openChildren, toggleNode }) => {
+const SubTree = ({
+  level, root, getChildNodes, openChildren, toggleNode,
+}) => {
   const childNodes = getChildNodes(root);
   const hasChildren = childNodes.length > 0;
   const open = openChildren.includes(root.id);
   return (
-    <Fragment>
+    <>
       <ListItem
         button={hasChildren}
         onClick={() => hasChildren && toggleNode(root)}
@@ -57,27 +59,24 @@ const SubTree = ({ level, root, getChildNodes, openChildren, toggleNode }) => {
           ))}
         </MuiList>
       </Collapse>
-    </Fragment>
+    </>
   );
 };
 
 const Tree = ({ ids, data }) => {
   const [openChildren, setOpenChildren] = useState([]);
-  const toggleNode = (node) =>
-    setOpenChildren((state) => {
-      if (state.includes(node.id)) {
-        return [
-          ...state.splice(0, state.indexOf(node.id)),
-          ...state.splice(state.indexOf(node.id) + 1, state.length),
-        ];
-      } else {
-        return [...state, node.id];
-      }
-    });
+  const toggleNode = (node) => setOpenChildren((state) => {
+    if (state.includes(node.id)) {
+      return [
+        ...state.splice(0, state.indexOf(node.id)),
+        ...state.splice(state.indexOf(node.id) + 1, state.length),
+      ];
+    }
+    return [...state, node.id];
+  });
   const nodes = ids.map((id) => data[id]);
   const roots = nodes.filter((node) => typeof node.parent_id === 'undefined');
-  const getChildNodes = (root) =>
-    nodes.filter((node) => node.parent_id === root.id);
+  const getChildNodes = (root) => nodes.filter((node) => node.parent_id === root.id);
   return (
     <MuiList>
       {roots.map((root) => (

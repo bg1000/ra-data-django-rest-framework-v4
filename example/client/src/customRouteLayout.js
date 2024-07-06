@@ -3,10 +3,12 @@ import { useGetList, useAuthenticated, Title } from 'react-admin';
 
 const CustomRouteLayout = () => {
   useAuthenticated();
-  const { ids, data, total, loaded } = useGetList(
+  const {
+    ids, data, total, loaded,
+  } = useGetList(
     'posts',
     { page: 1, perPage: 10 },
-    { field: 'published_at', order: 'DESC' }
+    { field: 'published_at', order: 'DESC' },
   );
 
   return loaded ? (
@@ -14,7 +16,11 @@ const CustomRouteLayout = () => {
       <Title title="Example Admin" />
       <h1>Posts</h1>
       <p>
-        Found <span className="total">{total}</span> posts !
+        Found
+        {' '}
+        <span className="total">{total}</span>
+        {' '}
+        posts !
       </p>
       <ul>
         {ids.map((id) => (

@@ -44,11 +44,11 @@ const PostShow = (props) => {
         <Tab label="post.form.summary">
           <TextField source="id" />
           <TextField source="title" />
-          {controllerProps.record &&
-            controllerProps.record.title ===
-              'Fusce massa lorem, pulvinar a posuere ut, accumsan ac nisi' && (
+          {controllerProps.record
+            && controllerProps.record.title
+              === 'Fusce massa lorem, pulvinar a posuere ut, accumsan ac nisi' && (
               <TextField source="teaser" />
-            )}
+          )}
           <ArrayField source="backlinks">
             <Datagrid>
               <DateField source="date" />

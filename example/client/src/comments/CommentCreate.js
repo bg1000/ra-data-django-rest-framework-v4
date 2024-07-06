@@ -26,7 +26,7 @@ const CommentCreate = (props) => (
       />
       <TextInput source="author.name" validate={minLength(10)} fullWidth />
       <DateInput source="created_at" defaultValue={now} />
-      <TextInput source="body" fullWidth={true} multiline={true} />
+      <TextInput source="body" fullWidth multiline />
     </SimpleForm>
   </Create>
 );

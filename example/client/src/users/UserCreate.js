@@ -25,7 +25,7 @@ const UserEditToolbar = ({
     <SaveButton
       label="user.action.save_and_show"
       redirect="show"
-      submitOnEnter={true}
+      submitOnEnter
     />
     {permissions === 'admin' && (
       <SaveButton

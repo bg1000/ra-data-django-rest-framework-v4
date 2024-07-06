@@ -13,28 +13,24 @@ const addUploadCapabilities = (dataProvider) => ({
     // Freshly dropped pictures are File objects
     // and must be converted to base64 strings
     const newPictures = params.data.pictures.filter(
-      (p) => p.rawFile instanceof File
+      (p) => p.rawFile instanceof File,
     );
     const formerPictures = params.data.pictures.filter(
-      (p) => !(p.rawFile instanceof File)
+      (p) => !(p.rawFile instanceof File),
     );
 
     return Promise.all(newPictures.map(convertFileToBase64))
-      .then((base64Pictures) =>
-        base64Pictures.map((picture64) => ({
-          src: picture64,
-          title: `${params.data.title}`,
-        }))
-      )
-      .then((transformedNewPictures) =>
-        dataProvider.update(resource, {
-          ...params,
-          data: {
-            ...params.data,
-            pictures: [...transformedNewPictures, ...formerPictures],
-          },
-        })
-      );
+      .then((base64Pictures) => base64Pictures.map((picture64) => ({
+        src: picture64,
+        title: `${params.data.title}`,
+      })))
+      .then((transformedNewPictures) => dataProvider.update(resource, {
+        ...params,
+        data: {
+          ...params.data,
+          pictures: [...transformedNewPictures, ...formerPictures],
+        },
+      }));
   },
 });
 
@@ -43,13 +39,12 @@ const addUploadCapabilities = (dataProvider) => ({
  * That's not the most optimized way to store images in production, but it's
  * enough to illustrate the idea of data provider decoration.
  */
-const convertFileToBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file.rawFile);
+const convertFileToBase64 = (file) => new Promise((resolve, reject) => {
+  const reader = new FileReader();
+  reader.readAsDataURL(file.rawFile);
 
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-  });
+  reader.onload = () => resolve(reader.result);
+  reader.onerror = reject;
+});
 
 export default addUploadCapabilities;

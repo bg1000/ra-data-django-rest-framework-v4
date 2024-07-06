@@ -35,7 +35,10 @@ const useEditStyles = makeStyles({
 
 const OptionRenderer = ({ record }) => (
   <span>
-    {record.title} - {record.id}
+    {record.title}
+    {' '}
+    -
+    {record.id}
   </span>
 );
 
@@ -43,8 +46,9 @@ const inputText = (record) => `${record.title} - ${record.id}`;
 
 const CommentEdit = (props) => {
   const classes = useEditStyles();
-  const { resource, record, redirect, save, basePath, version } =
-    useEditController(props);
+  const {
+    resource, record, redirect, save, basePath, version,
+  } = useEditController(props);
   return (
     <div className="edit-page">
       <Title defaultTitle={`Comment #${record ? record.id : ''}`} />
@@ -93,8 +97,8 @@ const CommentEdit = (props) => {
             <TextInput
               source="body"
               validate={minLength(10)}
-              fullWidth={true}
-              multiline={true}
+              fullWidth
+              multiline
             />
           </SimpleForm>
         )}

@@ -75,7 +75,7 @@ const UserEdit = ({ permissions, ...props }) => (
               { id: 'admin', name: 'Admin' },
               { id: 'user', name: 'User' },
             ]}
-            defaultValue={'user'}
+            defaultValue="user"
           />
         </FormTab>
       )}

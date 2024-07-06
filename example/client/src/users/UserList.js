@@ -16,6 +16,7 @@ import {
 
 import Aside from './Aside';
 import UserEditEmbedded from './UserEditEmbedded';
+
 export const UserIcon = PeopleIcon;
 
 const UserFilter = ({ permissions, ...props }) => (
@@ -30,11 +31,9 @@ const UserBulkActionButtons = (props) => (
   <BulkDeleteWithConfirmButton {...props} />
 );
 
-const rowClick = memoize((permissions) => (id, basePath, record) => {
-  return permissions === 'admin'
-    ? Promise.resolve('edit')
-    : Promise.resolve('show');
-});
+const rowClick = memoize((permissions) => (id, basePath, record) => (permissions === 'admin'
+  ? Promise.resolve('edit')
+  : Promise.resolve('show')));
 
 const UserList = ({ permissions, ...props }) => (
   <List
@@ -48,9 +47,7 @@ const UserList = ({ permissions, ...props }) => (
     {useMediaQuery((theme) => theme.breakpoints.down('sm')) ? (
       <SimpleList
         primaryText={(record) => record.name}
-        secondaryText={(record) =>
-          permissions === 'admin' ? record.role : null
-        }
+        secondaryText={(record) => (permissions === 'admin' ? record.role : null)}
       />
     ) : (
       <Datagrid

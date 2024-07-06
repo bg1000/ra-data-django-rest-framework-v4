@@ -4,15 +4,15 @@ import { Admin, Resource } from 'react-admin'; // eslint-disable-line import/no-
 import { render } from 'react-dom';
 import { Route } from 'react-router-dom';
 
-import comments from './comments';
-import CustomRouteLayout from './customRouteLayout';
-import CustomRouteNoLayout from './customRouteNoLayout';
 import drfProvider, {
   tokenAuthProvider,
   fetchJsonWithAuthToken,
   jwtTokenAuthProvider,
   fetchJsonWithAuthJWTToken,
 } from 'ra-data-django-rest-framework';
+import comments from './comments';
+import CustomRouteLayout from './customRouteLayout';
+import CustomRouteNoLayout from './customRouteNoLayout';
 import i18nProvider from './i18nProvider';
 import Layout from './Layout';
 import posts from './posts';
@@ -26,7 +26,7 @@ const useJWTAuth = parseBool(process.env.REACT_APP_USE_JWT_AUTH);
 
 if (useJWTAuth) {
   console.log(
-    'Using rest_framework_simplejwt.authentication.JWTAuthentication'
+    'Using rest_framework_simplejwt.authentication.JWTAuthentication',
   );
   authProvider = jwtTokenAuthProvider({ obtainAuthTokenUrl: '/api/token/' });
   dataProvider = drfProvider('/api', fetchJsonWithAuthJWTToken);
@@ -64,5 +64,5 @@ render(
       <Resource name="tags" {...tags} />,
     ]}
   </Admin>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

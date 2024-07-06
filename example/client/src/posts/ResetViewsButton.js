@@ -25,20 +25,19 @@ const ResetViewsButton = ({ resource, selectedIds }) => {
           'ra.notification.updated',
           'info',
           { smart_count: selectedIds.length },
-          true
+          true,
         );
         unselectAll(resource);
         refresh();
       },
-      onFailure: (error) =>
-        notify(
-          typeof error === 'string'
-            ? error
-            : error.message || 'ra.notification.http_error',
-          'warning'
-        ),
+      onFailure: (error) => notify(
+        typeof error === 'string'
+          ? error
+          : error.message || 'ra.notification.http_error',
+        'warning',
+      ),
       undoable: true,
-    }
+    },
   );
 
   return (

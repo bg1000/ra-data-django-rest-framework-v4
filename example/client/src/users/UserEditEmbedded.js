@@ -1,7 +1,9 @@
 /* eslint react/jsx-key: off */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Edit, SimpleForm, TextInput, required } from 'react-admin';
+import {
+  Edit, SimpleForm, TextInput, required,
+} from 'react-admin';
 
 const UserEditEmbedded = ({ permissions, ...props }) => (
   /* Passing " " as title disables the custom title */

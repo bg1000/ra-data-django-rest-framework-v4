@@ -176,7 +176,10 @@ export default (
 
       return { data: json };
     },
-
+  
+    /*
+    updateMany updates multiple id's with the same data
+    */
     updateMany: (resource, params) =>
       Promise.all(
         params.ids.map((id) =>
@@ -187,6 +190,25 @@ export default (
           )
         )
       ).then((responses) => ({ data: responses.map(({ json }) => json.id) })),
+      /*
+      bulkUpdate updates multiple id's with different data
+      */
+      bulkUpdate: async (resource, params) => {
+        const response = await callHttpClientFileHandling(
+          `${apiUrl}/${resource}/`,
+          'PATCH',
+          params.data
+        );
+      
+        // Check for a successful response code
+        if (response.status >= 200 && response.status < 300) {
+          return {
+            data: params.data, // Return the data that was sent for confirmation
+          };
+        } else {
+          throw new Error(`Failed to bulk update ${resource}: ${response.status}`);
+        }
+      },
 
     create: async (resource, params) => {
       const { json } = await callHttpClientFileHandling(

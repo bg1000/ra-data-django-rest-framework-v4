@@ -5,6 +5,18 @@ export interface Options {
   obtainUserInfoUrl: string;
 }
 
+const fetchAnonymousRouteAccess = (pathname: string) => {
+  const anonymousRoutes = [
+    '/verify/token',
+    'forgot/password',
+  ]
+  if (anonymousRoutes.includes(pathname)) {
+    return true
+  } else {
+    return false
+  }
+}
+
 function tokenAuthProvider(options: Options): AuthProvider {
   return {
     login: async ({ username, password }) => {
@@ -45,6 +57,10 @@ function tokenAuthProvider(options: Options): AuthProvider {
       return Promise.resolve();
     },
     getIdentity: async () => {
+      const pathname = window.location.pathname
+      if (fetchAnonymousRouteAccess(pathname)) {
+        return Promise.resolve({ id: null, fullName: null, avatar: null });
+      }
       try {
         // Fetch auth data from local storage
         const auth = JSON.parse(localStorage.getItem('auth') || '{}');
@@ -69,6 +85,10 @@ function tokenAuthProvider(options: Options): AuthProvider {
     },
     getPermissions: () => {
       try {
+        const pathname = window.location.pathname
+        if (fetchAnonymousRouteAccess(pathname)) {
+          return Promise.resolve({ groups: [], user_permissions: [] });
+        }
         const auth = localStorage.getItem('auth');
         if (auth) {
           const parsedAuth = JSON.parse(auth);
@@ -125,6 +145,10 @@ async function fetchUserData(id: string, options: Options) {
   return authData;
 }
 export function fetchJsonWithAuthToken(url: string, options: object) {
+  const pathname = window.location.pathname
+  if (fetchAnonymousRouteAccess(pathname)) {
+    return true
+  }
   return fetchUtils.fetchJson(
     url,
     Object.assign(createOptionsFromToken(), options)

@@ -7,8 +7,8 @@ export interface Options {
 
 const fetchAnonymousRouteAccess = (pathname: string) => {
   const anonymousRoutes = [
-    '/verify/token',
-    'forgot/password',
+    '/reset-password/verify-token',
+    '/reset-password/confirm',
   ]
   if (anonymousRoutes.includes(pathname)) {
     return true
